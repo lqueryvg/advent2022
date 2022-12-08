@@ -1,0 +1,35 @@
+{
+  "name": "@advent/root",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^16.11.12",
+    "nodemon": "^2.0.15",
+    "rimraf": "^3.0.2",
+    "ts-node": "^10.4.0",
+    "typescript": "^4.5.2"
+  },
+  "scripts": {
+    "watch": "nodemon",
+    "build": "rimraf ./build && tsc"
+  },
+  "private": true,
+  "workspaces": [
+    "day01",
+    "day02",
+    "day03",
+    "day04",
+    "day05",
+    "day06",
+    "day07",
+    "day08",
+    "day09",
+    "day10",
+    "day11",
+    "day12",
+    "day13",
+    "day14",
+    "day15"
+  ]
+}
