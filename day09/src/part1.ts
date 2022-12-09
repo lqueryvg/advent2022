@@ -1,98 +1,87 @@
 import { readFileSync } from 'fs'
 
-// let height = 0
-// let width = 0
-
 const part1 = (filename: string) => {
   const file = readFileSync(filename, 'utf-8')
   const lines = file.split(/\r\n|\n/)
 
-  // let visible: number[][] = []
-  // let forest: number[][] = []
+  const moves: any = {
+    UL: {
+      R: ['U', [0, 0]],
+      L: ['L', [-1, -1]],
+      U: ['U', [-1, -1]],
+      D: ['L', [0, 0]],
+    },
+    U: {
+      R: ['UR', [0, 0]],
+      L: ['UL', [0, 0]],
+      U: ['U', [0, -1]],
+      D: ['M', [0, 0]],
+    },
+    UR: {
+      R: ['R', [1, -1]],
+      L: ['U', [0, 0]],
+      U: ['U', [1, -1]],
+      D: ['R', [0, 0]],
+    },
+    L: {
+      R: ['M', [0, 0]],
+      L: ['L', [-1, 0]],
+      U: ['UL', [0, 0]],
+      D: ['DL', [0, 0]],
+    },
+    M: {
+      R: ['R', [0, 0]],
+      L: ['L', [0, 0]],
+      U: ['U', [0, 0]],
+      D: ['D', [0, 0]],
+    },
+    R: {
+      R: ['R', [1, 0]],
+      L: ['M', [0, 0]],
+      U: ['UR', [0, 0]],
+      D: ['DR', [0, 0]],
+    },
+    DL: {
+      R: ['D', [0, 0]],
+      L: ['L', [-1, 1]],
+      U: ['L', [0, 0]],
+      D: ['D', [-1, 1]],
+    },
+    D: {
+      R: ['DR', [0, 0]],
+      L: ['DL', [0, 0]],
+      U: ['M', [0, 0]],
+      D: ['D', [0, 1]],
+    },
+    DR: {
+      R: ['R', [1, 1]],
+      L: ['D', [0, 0]],
+      U: ['R', [0, 0]],
+      D: ['D', [1, 1]],
+    },
+  }
 
-  // const countVisible = () => {
-  //   let count = 0
-  //   for (let y = 0; y < height; y++) {
-  //     for (let x = 0; x < width; x++) {
-  //       const treeVisible = visible[y][x]
-  //       if (treeVisible === 1) {
-  //         count++
-  //       }
-  //     }
-  //   }
-  //   return count
-  // }
-
-  // const lookRight = () => {
-  //   for (let y = 0; y < height; y++) {
-  //     let max = -1
-  //     for (let x = 0; x < width; x++) {
-  //       if (forest[y][x] > max) {
-  //         max = forest[y][x]
-  //         visible[y][x] = 1
-  //       }
-  //     }
-  //   }
-  // }
-  // const lookLeft = () => {
-  //   for (let y = 0; y < height; y++) {
-  //     let max = -1
-  //     for (let x = width - 1; x >= 0; x--) {
-  //       if (forest[y][x] > max) {
-  //         max = forest[y][x]
-  //         visible[y][x] = 1
-  //       }
-  //     }
-  //   }
-  // }
-
-  // const lookDown = () => {
-  //   for (let x = 0; x < width; x++) {
-  //     let max = -1
-  //     for (let y = 0; y < height; y++) {
-  //       const treeSize = forest[y][x]
-  //       if (treeSize > max) {
-  //         max = treeSize
-  //         visible[y][x] = 1
-  //       }
-  //     }
-  //   }
-  // }
-
-  // const lookUp = () => {
-  //   for (let x = 0; x < width; x++) {
-  //     let max = -1
-  //     for (let y = height - 1; y >= 0; y--) {
-  //       const treeSize = forest[y][x]
-  //       if (treeSize > max) {
-  //         max = treeSize
-  //         visible[y][x] = 1
-  //       }
-  //     }
-  //   }
-  // }
+  let [x, y] = [0, 0]
+  let current = 'M'
+  const visitedPositions = new Set()
 
   for (const line of lines) {
     if (line === '') continue // skip blank lines
-    // height++
-    // width = line.length
 
-    // visible.push([])
-    // forest.push([])
-    // // console.log({ line })
-    // for (let x = 0; x < width; x++) {
-    //   visible[height - 1][x] = 0
-    //   forest[height - 1][x] = Number(line.charAt(x))
-    // }
+    const words = line.split(/\s+/)
+
+    let [direction, count] = words
+    let i = Number(count)
+    while (i > 0) {
+      const [next, [dx, dy]] = moves[current][direction]
+      x += dx
+      y += dy
+      current = next
+      visitedPositions.add(`${x},${y}`)
+      i--
+    }
   }
-  // lookRight()
-  // lookLeft()
-  // lookUp()
-  // lookDown()
-  // console.log({ forest, visible })
-
-  // console.log({ height, width })
-  console.log({ part1: 'TBD' })
+  console.log({ part1: visitedPositions.size })
 }
 
 export default part1
