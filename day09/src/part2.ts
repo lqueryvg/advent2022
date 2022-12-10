@@ -133,9 +133,8 @@ const part2 = (filename: string) => {
     const words = line.split(/\s+/)
 
     let [lineDirection, count] = words
-    let stepsToTake = Number(count)
 
-    while (stepsToTake > 0) {
+    for (let steps = Number(count); steps > 0; steps--) {
       let directionToMoveNextKnot = lineDirection
       let knotIndex = numTailKnots - 1
       while (knotIndex >= 0) {
@@ -156,7 +155,6 @@ const part2 = (filename: string) => {
       x += dx
       y += dy
       visitedPositions.add(`${x},${y}`)
-      stepsToTake--
     }
   }
   console.log({ part2: visitedPositions.size })

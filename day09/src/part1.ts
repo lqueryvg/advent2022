@@ -71,14 +71,13 @@ const part1 = (filename: string) => {
     const words = line.split(/\s+/)
 
     let [direction, count] = words
-    let i = Number(count)
-    while (i > 0) {
+
+    for (let i = Number(count); i > 0; i--) {
       const [next, [dx, dy]] = moves[current][direction]
       x += dx
       y += dy
       current = next
       visitedPositions.add(`${x},${y}`)
-      i--
     }
   }
   console.log({ part1: visitedPositions.size })
