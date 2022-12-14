@@ -13,12 +13,10 @@ class Point {
     this.y = 0
     if (typeof point === 'string') {
       ;[this.x, this.y] = point.split(',').map(Number)
-      // console.log(this.x, this.y)
     }
     if (this.x > maxX) maxX = this.x
     if (this.y > maxY) maxY = this.y
     if (this.x < minX) minX = this.x
-    // if (this.y < minY) minY = this.y
   }
 }
 
@@ -59,7 +57,6 @@ const main = (filename: string) => {
         .filter((a: Point[]) => a.length === 2)
     )
   }
-  // console.log({ minX, maxX, minY, maxY })
 
   const drawRock = (grid: any, pointPair: any) => {
     const p1 = pointPair[0]
