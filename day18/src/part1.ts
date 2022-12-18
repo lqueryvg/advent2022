@@ -11,7 +11,6 @@ class Cube {
   x: number
   y: number
   z: number
-  // neighbors: Cube[]
   neighborCount = 0
 
   updateNeighborCountIfExists(x: number, y: number, z: number) {
@@ -40,11 +39,8 @@ class Cube {
 
 const main = () => {
   const input = getInput('input.txt')
-  const addCube = (s: string) => {
-    cubes.set(s, new Cube(s))
-  }
   for (let line of input) {
-    addCube(line)
+    cubes.set(line, new Cube(line))
   }
   // console.log({ cubes })
   let totalNeighbors = 0

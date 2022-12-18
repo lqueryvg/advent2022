@@ -6,35 +6,8 @@ const getInput = (filename: string) => {
   return lines
 }
 
-const rockCubes = new Map<string, RockCube>()
+const rockCubes = new Set<string>()
 const airCubes = new Set<string>()
-class RockCube {
-  x: number
-  y: number
-  z: number
-  neighborCount = 0
-
-  updateNeighborCountIfExists(x: number, y: number, z: number) {
-    const s = `${x},${y},${z}`
-    if (rockCubes.has(s)) {
-      rockCubes.get(s)!.neighborCount++
-      return 1
-    }
-    return 0
-  }
-  constructor(thisString: string) {
-    const [x, y, z] = thisString.split(',').map(Number)
-    this.x = x
-    this.y = y
-    this.z = z
-    this.neighborCount += this.updateNeighborCountIfExists(x - 1, y, z)
-    this.neighborCount += this.updateNeighborCountIfExists(x + 1, y, z)
-    this.neighborCount += this.updateNeighborCountIfExists(x, y - 1, z)
-    this.neighborCount += this.updateNeighborCountIfExists(x, y + 1, z)
-    this.neighborCount += this.updateNeighborCountIfExists(x, y, z - 1)
-    this.neighborCount += this.updateNeighborCountIfExists(x, y, z + 1)
-  }
-}
 
 const printBounds = () => {
   let maxX = Number.MIN_VALUE
@@ -43,13 +16,14 @@ const printBounds = () => {
   let minY = Number.MAX_VALUE
   let maxZ = Number.MIN_VALUE
   let minZ = Number.MAX_VALUE
-  for (let cube of rockCubes.values()) {
-    maxX = Math.max(maxX, cube.x)
-    maxY = Math.max(maxY, cube.y)
-    maxZ = Math.max(maxZ, cube.z)
-    minX = Math.min(minX, cube.x)
-    minY = Math.min(minY, cube.y)
-    minZ = Math.min(minZ, cube.z)
+  for (let coordsString of rockCubes.values()) {
+    const [x, y, z] = coordsString.split(',').map(Number)
+    minX = Math.min(minX, x)
+    maxX = Math.max(maxX, x)
+    minY = Math.min(minY, y)
+    maxY = Math.max(maxY, y)
+    minZ = Math.min(minZ, z)
+    maxZ = Math.max(maxZ, z)
   }
   console.log({ minX, maxX, minY, maxY, minZ, maxZ })
 }
@@ -97,23 +71,20 @@ const fillAir = (startCoordsString: string) => {
 
 const main = () => {
   const input = getInput('input.txt')
-  const addCube = (s: string) => {
-    rockCubes.set(s, new RockCube(s))
-  }
 
   for (let line of input) {
-    addCube(line)
+    rockCubes.add(line)
   }
 
   if (input.length === 26) {
-    // example input
+    // we are using the example input
     min = 0
     max = 7
     fillAir('0,0,0')
   } else {
+    // we are using the full input
     // printBounds()
     // { minX: 0, maxX: 19, minY: 0, maxY: 19, minZ: 0, maxZ: 19 }
-    // full input
     min = -1
     max = 20
     fillAir('-1,-1,-1')
