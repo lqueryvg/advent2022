@@ -111,6 +111,9 @@ interface Shape {
   bits: number
 }
 
+let sampleTotal = 0
+let rockNum = 1
+
 class Rock {
   static readonly rockShapes: Shape[] = [
     // bits start at bottom left corner of shape
@@ -141,6 +144,44 @@ class Rock {
     )
     return (caveBitMask & this.shape.bits) === 0
   }
+
+  checkForRepeats(cave: Cave) {
+    let samplePosition = 3673
+    let sampleSize = 2660
+    // let windowEnd = 150
+    // let windowSampleSum = 0
+
+    const getWindowTotal = (start: number, end: number) => {
+      // inclusive
+      // console.log('getWindowTotal', { start, end })
+      let total = 0
+      for (let i = start; i <= end; i++) {
+        total += cave.bits[i]
+      }
+      return total
+    }
+
+    // console.log({ h: cave.highestRockPosition })
+    if (cave.highestRockPosition === samplePosition) {
+      sampleTotal = getWindowTotal(
+        samplePosition - sampleSize + 1,
+        samplePosition
+      )
+      console.log({ sampleTotal })
+    }
+
+    if (cave.highestRockPosition > samplePosition) {
+      const total = getWindowTotal(
+        cave.highestRockPosition - sampleSize + 1,
+        cave.highestRockPosition
+      )
+      if (total === sampleTotal) {
+        console.log(
+          `possible repeat at height ${cave.highestRockPosition} after ${rockNum} rocks`
+        )
+      }
+    }
+  }
   solidify(cave: Cave) {
     cave.paintShape(this.shape, this.x, this.y)
     // console.log({highestRockPosition:cave.highestRockPosition,  })
@@ -148,17 +189,18 @@ class Rock {
       cave.highestRockPosition,
       this.y + this.shape.height - 1
     )
+
+    this.checkForRepeats(cave)
     // console.log({ highestRockPosition: cave.highestRockPosition })
   }
 }
 
 const main = () => {
   const input = getInput('input.txt')
-  console.log({ jetPatternLength: input.jetPattern.length })
+  // console.log({ jetPatternLength: input.jetPattern.length })
 
   let rockShapeIndex = 0
   let jetIndex = 0
-  let rockNum = 1
   const cave = new Cave()
 
   // const rocksWanted = 100
@@ -168,20 +210,22 @@ const main = () => {
   while (rockNum <= rocksWanted) {
     const rock = new Rock(rockShapeIndex, cave)
 
-    if (rockShapeIndex % 5 === 0 && jetIndex % input.jetPattern.length === 0) {
-      console.log('gods1 ', rockNum)
-    }
-    if (rockNum === 5 * input.jetPattern.length + 1) {
-      // console.log('gods2 ', rockNum)
-      console.log('gods2 ', {
-        rockNum,
-        rockShapeIndex,
-        jetIndex,
-        // answer: cave.highestRockPosition,
-      })
-      console.log('gods2 ', cave.bits[cave.highestRockPosition].toString(2))
-      // cave.print()
-    }
+    // if (rockShapeIndex % 5 === 0 && jetIndex % input.jetPattern.length === 0) {
+    //   console.log('gods1 ', rockNum)
+    // }
+
+    // if (rockNum === 5 * input.jetPattern.length + 1) {
+    //   // console.log('gods2 ', rockNum)
+    //   console.log('gods2 ', {
+    //     rockNum,
+    //     rockShapeIndex,
+    //     jetIndex,
+    //     // answer: cave.highestRockPosition,
+    //   })
+    //   console.log('gods2 ', cave.bits[cave.highestRockPosition].toString(2))
+    //   // cave.print()
+    // }
+
     // rock falls...
     while (true) {
       // console.log(`rock x=${rock.x} y=${rock.y}`)
@@ -206,23 +250,27 @@ const main = () => {
       rock.y--
     }
 
-    const maxCaveHeight = 5000000
-    const rowsToBeRemoved = maxCaveHeight - 200
-    if (cave.bits.length > maxCaveHeight) {
-      console.log(
-        `garbage collection after ${cave.bits.length} rows, garbageCollectedRowCount = ${numRowsGarbageCollected}`
-      )
-      cave.bits.splice(0, rowsToBeRemoved)
-      const newBits = [...cave.bits]
-      cave.bits = newBits
-      numRowsGarbageCollected += rowsToBeRemoved
-      cave.highestRockPosition -= rowsToBeRemoved
-    }
+    // const maxCaveHeight = 5000000
+    // const rowsToBeRemoved = maxCaveHeight - 200
+    // if (cave.bits.length > maxCaveHeight) {
+    //   console.log(
+    //     `garbage collection after ${cave.bits.length} rows, garbageCollectedRowCount = ${numRowsGarbageCollected}`
+    //   )
+    //   cave.bits.splice(0, rowsToBeRemoved)
+    //   const newBits = [...cave.bits]
+    //   cave.bits = newBits
+    //   numRowsGarbageCollected += rowsToBeRemoved
+    //   cave.highestRockPosition -= rowsToBeRemoved
+    // }
+    // console.log({ rockNum, h: cave.highestRockPosition })
 
     rockShapeIndex++
     rockNum++
+
+    // if (cave.highestRockPosition > 200) break
+    if (rockNum > 20000) break
   }
-  cave.print()
+  // cave.print()
 
   return cave.highestRockPosition + numRowsGarbageCollected + 1
 }
