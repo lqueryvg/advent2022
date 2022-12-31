@@ -20,7 +20,7 @@ class You {
         this.direction = (this.direction + 4 - 1) % 4
         break
     }
-    console.log({ direction: this.direction })
+    // console.log({ direction: this.direction })
   }
 
   seekDown(lines: string[]) {
@@ -95,7 +95,7 @@ class You {
       default:
         throw new Error(`unsupported direction: ${this.direction}`)
     }
-    console.log({ charAhead, newX, newY })
+    // console.log({ charAhead, newX, newY })
     if (charAhead! === '#') return false
     if (charAhead! === '.') {
       this.x = newX
@@ -144,7 +144,7 @@ const main = () => {
   // you.x = 8
 
   for (let instruction of input.instructions) {
-    console.log({ instruction })
+    // console.log({ instruction })
     switch (instruction.type) {
       case 'move':
         you.move(Number(instruction.value), input.lines)
@@ -155,7 +155,7 @@ const main = () => {
     }
   }
 
-  console.log({ you })
+  // console.log({ you })
 
   return 1000 * (you.y + 1) + 4 * (you.x + 1) + you.direction
 }
